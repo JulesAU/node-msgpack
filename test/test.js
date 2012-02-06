@@ -1,5 +1,5 @@
 var assert = require('assert');
-var msgpack = require('msgpack2');
+var msgpack = require('../lib/msgpack');
 
 var testEqual = function(v) {
     var vv = msgpack.unpack(msgpack.pack(v));
@@ -28,6 +28,7 @@ testEqual(false);
 testEqual([1, 2, 3]);
 testEqual([1, 'abc', false, null]);
 testEqual({'a' : [1, 2, 3], 'b' : 'cdef', 'c' : {'nuts' : 'qqq'}});
+testEqual([1328565343313, 1328565343313.11, -1328565343313, -1328565343313.11]);
 
 // Make sure we're catching circular references for arrays
 var a = [1, 2, 3, 4];
