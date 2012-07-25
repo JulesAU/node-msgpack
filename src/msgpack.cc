@@ -216,10 +216,10 @@ msgpack_to_v8(msgpack_object *mo) {
             False();
 
     case MSGPACK_OBJECT_POSITIVE_INTEGER:
-        return Integer::NewFromUnsigned(mo->via.u64);
+        return Number::New((double)mo->via.u64);
 
     case MSGPACK_OBJECT_NEGATIVE_INTEGER:
-        return Integer::New(mo->via.i64);
+        return Number::New(mo->via.i64);
 
     case MSGPACK_OBJECT_DOUBLE:
         return Number::New(mo->via.dec);
