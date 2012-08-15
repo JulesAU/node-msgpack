@@ -12,31 +12,16 @@ required for serialized data is far less than JSON.
     cd node_modules
     git clone git://github.com/JulesAU/node-msgpack.git msgpack2
     cd msgpack2
-   
+
     # Bootstrap the MsgPack library:
     git submodule init
     git submodule update
     cd deps/msgpack-full/cpp
     ./bootstrap
-   
+
     # Now build the node-msgpack module:
     cd ../../../
     make
-
-
-### Performance
-
-`node-msgpack` outperforms the built-in `JSON.stringify()` and `JSON.parse()`
-methods handily. The following tests were performed with 500,000 instances of
-the JavaScript object `{'abcdef' : 1, 'qqq' : 13, '19' : [1, 2, 3, 4]}`:
-
-   * `JSON.stringify()` 7.17 seconds
-   * `JSON.parse(JSON.stringify())` 22.18 seconds
-   * `msgpack.pack()` 5.80 seconds
-   * `msgpack.unpack(msgpack.pack())` 8.62 seconds
-
-Note that `node-msgpack` produces and consumes Buffer objects, and a such does
-not incur encoding/decoding overhead when performing I/O with native strings.
 
 ### Usage
 
@@ -50,7 +35,7 @@ The below code snippet packs and then unpacks a JavaScript object, verifying
 the resulting object at the end using `assert.deepEqual()`.
 
     var assert = require('assert');
-    var msgpack = require('msgpack');
+    var msgpack = require('msgpack2');
 
     var o = {"a" : 1, "b" : 2, "c" : [1, 2, 3]};
     var b = msgpack.pack(o);
@@ -62,10 +47,10 @@ As a convenience, a higher level streaming API is provided in the
 `msgpack.Stream` class, which can be constructed around a `net.Stream`
 instance. This object emits `msg` events when an object has been received.
 
-    var msgpack = require('msgpack');
+    var msgpack = require('msgpack2');
 
     // ... get a net.Stream instance, s, from somewhere
-    
+
     var ms = new msgpack.Stream(s);
     ms.addListener('msg', function(m) {
         sys.debug('received message: ' + sys.inspect(m));
@@ -127,7 +112,7 @@ stdin and writing to stdout.
 
     % echo '[1, 2, 3]' | ./bin/json2msgpack | xxd -
     0000000: 9301 0203                                ....
-    % echo '[1, 2, 3]' | ./bin/json2msgpack | ./bin/msgpack2json 
+    % echo '[1, 2, 3]' | ./bin/json2msgpack | ./bin/msgpack2json
     [1,2,3]
 
 ### Building and installation
@@ -136,13 +121,13 @@ There are two ways to install msgpack.
 
 ## npm
 
-		npm install msgpack
+		npm install msgpack2
 
-This should build and install msgpack for you. Then just `require('msgpack')`.
+This should build and install msgpack for you. Then just `require('msgpack2')`.
 
 ## Manually
 
-Use `make` to build the add-on, then manually copy `build/default/mpBindings.node` 
+Use `make` to build the add-on, then manually copy `build/default/mpBindings.node`
 and `lib/msgpack.js` it to wherever your node.js installation will look for it (or
 add the build directory to your `$NODE_PATH`).
 
@@ -158,3 +143,17 @@ gcc in your `$PATH`. On Mac OS X Snow Leopard (10.5.x), you may have to use
 `gcc-4.2`, which should come with your box but is not used by default.
 
     % make CC=gcc-4.2 CXX=gcc-4.2
+
+### Distributing to NPM
+    git clone git://github.com/JulesAU/node-msgpack.git msgpack2
+    cd msgpack2
+
+    # Bootstrap the MsgPack library:
+    git submodule init
+    git submodule update
+    cd deps/msgpack-full/cpp
+    ./bootstrap
+
+    cd ../../../
+    npm publish
+
